@@ -1,4 +1,4 @@
-"""A study focuses on Date Arithmetic Operations
+""" A study focuses on date operations and working with files (prettytable)
 
     author: Fatih IZGI
     date: 13-Mar-2020
