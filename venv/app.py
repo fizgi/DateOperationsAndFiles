@@ -13,7 +13,6 @@ from prettytable import PrettyTable
 
 def date_arithmetic():
     """ Code segment demonstrating expected return values. """
-
     three_days_after_02272000 = datetime(2020, 2, 27) + timedelta(days=3)
     three_days_after_02272017 = datetime(2019, 2, 27) + timedelta(days=3)
     days_passed_01012017_10312017 = (datetime(2019, 9, 30) - datetime(2019, 2, 1)).days
@@ -49,7 +48,7 @@ class FileAnalyzer:
     """ a class that given a directory name, searches that directory
         for Python files and calculates a summary of the file """
     def __init__(self, directory: str):
-        """ store the directory and files summary"""
+        """ store the directory and files summary """
         self.directory: str = directory # NOT mandatory!
         self.files_summary: Dict[str, Dict[str, int]] = dict()
 
@@ -70,7 +69,7 @@ class FileAnalyzer:
                         line_count: int = 0
                         char_count: int = 0
 
-                        for line in py_file:
+                        for line in py_file:  # calculate values for the file
                             if line.strip(" ").startswith("class "):
                                 class_count += 1
                             elif line.strip(" ").startswith("def "):
@@ -91,7 +90,7 @@ class FileAnalyzer:
         """ prettify the data """
         table: PrettyTable = PrettyTable()
         table.field_names = ["File Name", "Classes", "Functions", "Lines", "Characters"]
-        for key, value in self.files_summary.items():
-            table.add_row([key] + [v for k, v in value.items()])
+        for key, value in self.files_summary.items():  # add rows to the table
+            table.add_row([key] + [v for k, v in value.items()])  # key(file) and values
 
         print(table)
