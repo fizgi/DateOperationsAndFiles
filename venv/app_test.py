@@ -1,5 +1,5 @@
-""" Test implementation class of the study
-    which focuses on Date Arithmetic Operations
+""" Test implementation class of the study which
+    focuses on on date operations and working with files (prettytable)
 
     author: Fatih IZGI
     date: 13-Mar-2020
@@ -42,6 +42,10 @@ class ListTest(unittest.TestCase):
         with self.assertRaises(ValueError):  # raise ValueError if field != row_field_count
             result = [(cwid, name, major) for cwid, name, major in
                       file_reader(path, 2, sep='|', header=True)]  # sent 2, should be 3
+
+    def test_file_analyzer(self):
+        """ testing file analyzer """
+        pass
 
 if __name__ == '__main__':
     unittest.main(exit=False, verbosity=2)

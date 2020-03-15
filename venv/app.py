@@ -6,8 +6,9 @@
 """
 
 from datetime import datetime, timedelta
-from typing import Iterator, Tuple, IO
-import prettytable
+from typing import Iterator, Tuple, IO, Dict
+import os
+from prettytable import PrettyTable
 
 
 def date_arithmetic():
@@ -20,7 +21,8 @@ def date_arithmetic():
     return three_days_after_02272000, three_days_after_02272017, days_passed_01012017_10312017
 
 
-def file_reader(path: str, fields: int, sep: str = ",", header: bool = False) -> Iterator[Tuple[str]]:
+def file_reader(path: str, fields: int, sep: str = ",", header: bool = False)\
+        -> Iterator[Tuple[str]]:
     """ a generator function to read field-separated text files
         and yield a tuple with all of the values from a single line """
     try:  # to open the file
@@ -46,17 +48,50 @@ def file_reader(path: str, fields: int, sep: str = ",", header: bool = False) ->
 class FileAnalyzer:
     """ a class that given a directory name, searches that directory
         for Python files and calculates a summary of the file """
-    def __init__(self, directory):
+    def __init__(self, directory: str):
         """ store the directory and files summary"""
-        self.directory = directory # NOT mandatory!
+        self.directory: str = directory # NOT mandatory!
         self.files_summary: Dict[str, Dict[str, int]] = dict()
 
-        self.analyze_files() # summerize the python files data
+        self.analyze_files() # summarize the python files data
 
     def analyze_files(self):
-        """ Your docstring should go here for the description of the method."""
-        pass # implement your code here
+        """ analyze the file """
+        for file in os.listdir(self.directory):
+            if file.endswith(".py"):
+                try:  # to open the file
+                    py_file: IO = open(os.path.join(self.directory, file), "r")
+                except FileNotFoundError:
+                    print(f"File {py_file} is not found")
+                else:
+                    with py_file:  # close file after opening
+                        class_count: int = 0
+                        function_count: int = 0
+                        line_count: int = 0
+                        char_count: int = 0
+
+                        for line in py_file:
+                            if line.strip(" ").startswith("class "):
+                                class_count += 1
+                            elif line.strip(" ").startswith("def "):
+                                function_count += 1
+
+                            line_count += 1
+                            char_count += len(line)
+
+                        self.files_summary[str(os.path.join(self.directory, file))] = {
+                            "class": class_count,
+                            "function": function_count,
+                            "line": line_count,
+                            "char": char_count
+                        }
+
 
     def pretty_print(self):
-        """ Your docstring should go here for the description of the method."""
-        pass # implement your code here
+        """ prettify the data """
+        table: PrettyTable = PrettyTable()
+        table.field_names = ["File Name", "Classes", "Functions", "Lines", "Characters"]
+        for key, value in self.files_summary.items():
+            table.add_row([key] + [v for k, v in value.items()])
+
+        print(table)
