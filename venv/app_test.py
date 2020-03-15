@@ -12,7 +12,7 @@ from typing import List, Dict
 from app import date_arithmetic, file_reader, FileAnalyzer
 
 
-class ListTest(unittest.TestCase):
+class TestDateAndFile(unittest.TestCase):
     """ Test class of the methods """
 
     def test_date_arithmetic(self):
