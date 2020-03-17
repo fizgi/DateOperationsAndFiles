@@ -23,7 +23,7 @@ class TestDateAndFile(unittest.TestCase):
 
     def test_file_reader(self):
         """ testing file reader """
-        path: str = "wrong_file_name.txt"
+        path: str = "bad_file_name.txt"
 
         with self.assertRaises(FileNotFoundError):
             result = [(cwid, name, major) for cwid, name, major in
@@ -54,6 +54,11 @@ class TestDateAndFile(unittest.TestCase):
 
     def test_file_analyzer(self):
         """ testing file analyzer """
+        directory: str = "bad_directory"
+
+        with self.assertRaises(FileNotFoundError):
+            file_analyzer: FileAnalyzer = FileAnalyzer(directory)
+
         directory: str = "Directory"
         file_analyzer: FileAnalyzer = FileAnalyzer(directory)
         expect: List[Dict[str, int]] = [{'class': 0, 'function': 4, 'line': 92, 'char': 3209},

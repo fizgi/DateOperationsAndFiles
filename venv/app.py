@@ -6,7 +6,7 @@
 """
 
 from datetime import datetime, timedelta
-from typing import Iterator, Tuple, IO, Dict
+from typing import Iterator, Tuple, Dict, List
 import os
 from prettytable import PrettyTable
 
@@ -25,15 +25,16 @@ def file_reader(path: str, fields: int, sep: str = ",", header: bool = False)\
     """ a generator function to read field-separated text files
         and yield a tuple with all of the values from a single line """
     if not (file := open(path, "r")):
-        raise FileNotFoundError
+        raise FileNotFoundError(f"File {path} is not found")
 
     with file:  # close file after opening
         for line_number, line in enumerate(file, 1):
-            row_fields: List[str] = [field for field in line.rstrip("\n").split(sep)]
+            row_fields: List[str] = line.rstrip("\n").split(sep)
             row_field_count: int = len(row_fields)
 
             if row_field_count != fields:
-                raise ValueError
+                raise ValueError(f"‘{path}’ has {row_field_count} fields "
+                                 f"on line {line_number} but expected {fields}")
 
             if not header or line_number != 1:
                 yield tuple(row_fields)
@@ -51,10 +52,13 @@ class FileAnalyzer:
 
     def analyze_files(self):
         """ analyze the file """
+        if not os.listdir(self.directory):
+            raise FileNotFoundError(f"The specified directory ‘{self.directory}’ is not found")
+
         for file in os.listdir(self.directory):
             if file.endswith(".py"):
                 if not (py_file := open(os.path.join(self.directory, file), "r")):
-                    raise FileNotFoundError
+                    raise FileNotFoundError(f"File {py_file} is not found or can not be opened")
 
                 with py_file:  # close file after opening
                     class_count: int = 0
@@ -63,9 +67,9 @@ class FileAnalyzer:
                     char_count: int = 0
 
                     for line in py_file:  # calculate values for the file
-                        if line.strip(" ").startswith("class "):
+                        if line.strip().startswith("class "):
                             class_count += 1
-                        elif line.strip(" ").startswith("def "):
+                        elif line.strip().startswith("def "):
                             function_count += 1
 
                         line_count += 1
