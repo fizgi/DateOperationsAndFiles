@@ -23,13 +23,13 @@ class TestDateAndFile(unittest.TestCase):
 
     def test_file_reader(self):
         """ testing file reader """
-        path = "wrong_file_name.txt"
+        path: str = "wrong_file_name.txt"
 
         with self.assertRaises(FileNotFoundError):
             result = [(cwid, name, major) for cwid, name, major in
                       file_reader(path, 3, sep='|', header=True)]
 
-        path = "student_majors.txt"
+        path: str = "student_majors.txt"
 
         with self.assertRaises(ValueError):  # raise ValueError if field != row_field_count
             result = [(cwid, name, major) for cwid, name, major in
