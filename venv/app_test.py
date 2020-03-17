@@ -23,13 +23,24 @@ class TestDateAndFile(unittest.TestCase):
 
     def test_file_reader(self):
         """ testing file reader """
+        path = "wrong_file_name.txt"
+
+        with self.assertRaises(FileNotFoundError):
+            result = [(cwid, name, major) for cwid, name, major in
+                      file_reader(path, 3, sep='|', header=True)]
+
         path = "student_majors.txt"
+
+        with self.assertRaises(ValueError):  # raise ValueError if field != row_field_count
+            result = [(cwid, name, major) for cwid, name, major in
+                      file_reader(path, 2, sep='|', header=True)]  # sent 2, should be 3
 
         result = [(cwid, name, major) for cwid, name, major in
                   file_reader(path, 3, sep='|', header=True)]  # if header is True
         expect: tuple(str, str, str) = [('123', 'Jin He', 'Computer Science'),  # dont show header
                                         ('234', 'Nanda Koka', 'Software Engineering'),
                                         ('345', 'Benji Cai', 'Software Engineering')]
+
         self.assertTrue(result == expect)
 
         result = [(cwid, name, major) for cwid, name, major in
@@ -40,9 +51,6 @@ class TestDateAndFile(unittest.TestCase):
                                         ('345', 'Benji Cai', 'Software Engineering')]
         self.assertTrue(result == expect)
 
-        with self.assertRaises(ValueError):  # raise ValueError if field != row_field_count
-            result = [(cwid, name, major) for cwid, name, major in
-                      file_reader(path, 2, sep='|', header=True)]  # sent 2, should be 3
 
     def test_file_analyzer(self):
         """ testing file analyzer """
