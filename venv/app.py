@@ -45,6 +45,9 @@ class FileAnalyzer:
         for Python files and calculates a summary of the file """
     def __init__(self, directory: str):
         """ store the directory and files summary """
+        if not os.path.exists(directory):
+            raise FileNotFoundError(f"The specified directory ‘{directory}’ is not found")
+
         self.directory: str = directory # NOT mandatory!
         self.files_summary: Dict[str, Dict[str, int]] = dict()
 
@@ -52,9 +55,6 @@ class FileAnalyzer:
 
     def analyze_files(self):
         """ analyze the file """
-        if not os.listdir(self.directory):
-            raise FileNotFoundError(f"The specified directory ‘{self.directory}’ is not found")
-
         for file in os.listdir(self.directory):
             if file.endswith(".py"):
                 if not (py_file := open(os.path.join(self.directory, file), "r")):

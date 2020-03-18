@@ -40,7 +40,6 @@ class TestDateAndFile(unittest.TestCase):
         expect: tuple(str, str, str) = [('123', 'Jin He', 'Computer Science'),  # dont show header
                                         ('234', 'Nanda Koka', 'Software Engineering'),
                                         ('345', 'Benji Cai', 'Software Engineering')]
-
         self.assertTrue(result == expect)
 
         result = [(cwid, name, major) for cwid, name, major in
@@ -54,13 +53,11 @@ class TestDateAndFile(unittest.TestCase):
 
     def test_file_analyzer(self):
         """ testing file analyzer """
-        directory: str = "bad_directory"
-
         with self.assertRaises(FileNotFoundError):
-            file_analyzer: FileAnalyzer = FileAnalyzer(directory)
+            fa = FileAnalyzer("doesn't_exist")  # invalid directory
+            fa.pretty_print()
 
-        directory: str = "Directory"
-        file_analyzer: FileAnalyzer = FileAnalyzer(directory)
+        file_analyzer: FileAnalyzer = FileAnalyzer("Directory")  # valid directory
         expect: List[Dict[str, int]] = [{'class': 0, 'function': 4, 'line': 92, 'char': 3209},
                                         {'class': 1, 'function': 4, 'line': 48, 'char': 1595},\
                                         {'class': 1, 'function': 9, 'line': 107, 'char': 3610},\
